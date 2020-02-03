@@ -6,5 +6,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IAppointmentsRepository extends MongoRepository<AppointmentModel, ObjectId> {
+public interface AppointmentsRepository extends MongoRepository<AppointmentModel, ObjectId> {
 }
