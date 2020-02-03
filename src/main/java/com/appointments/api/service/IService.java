@@ -1,4 +1,14 @@
 package com.appointments.api.service;
 
-public interface IService {
+import java.util.List;
+
+public interface IService<T, U> {
+
+    public T save(T model);
+
+    public Iterable<T> saveAll(Iterable<T> models);
+
+    List<T> findAll();
+
+    void clearCollection();
 }
