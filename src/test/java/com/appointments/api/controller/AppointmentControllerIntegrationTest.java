@@ -56,7 +56,12 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
     }
 
     @BeforeEach
-    void clearCollection() {
+    void clearBeforeEach() {
+        appointmentService.deleteAll();
+    }
+
+    @BeforeEach
+    void clearAfterEach() {
         appointmentService.deleteAll();
     }
 }

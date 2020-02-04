@@ -59,8 +59,8 @@ public class AppointmentServiceTest implements IApiApplicationTest {
         appointmentService.deleteAll();
     }
 
-//    @AfterEach
-//    void clearAfterAll() {
-//        appointmentService.deleteAll();
-//    }
+    @AfterEach
+    void clearAfterEach() {
+        appointmentService.deleteAll();
+    }
 }
