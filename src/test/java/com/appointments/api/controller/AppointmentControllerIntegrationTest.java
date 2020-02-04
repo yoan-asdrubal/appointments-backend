@@ -3,11 +3,14 @@ package com.appointments.api.controller;
 import com.appointments.api.IApiApplicationTest;
 import com.appointments.api.model.AppointmentModel;
 import com.appointments.api.service.AppointmentService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -32,6 +36,9 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
 
     @MockBean
     private AppointmentService appointmentService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     void getAllAppointments() throws Exception {
@@ -53,6 +60,33 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
         mockMvc.perform(MockMvcRequestBuilders.get("/appointment")
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2))).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    void saveAppointment() throws Exception {
+        AppointmentModel appointmentModel = new AppointmentModel(
+                new ObjectId().toString(),
+                LocalDateTime.of(2020, 02, 04, 10, 30),
+                LocalDateTime.of(220, 02, 04, 17, 00),
+                "Appointment", "Description for Appointment"
+        );
+        String id = new ObjectId().toString();
+
+
+        Mockito.when(appointmentService.save(ArgumentMatchers.any(AppointmentModel.class))).thenReturn(appointmentModel);
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/appointment")
+                .content(objectMapper.writeValueAsString(appointmentModel))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+        AppointmentModel result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), AppointmentModel.class);
+        Assertions.assertNotNull(result.getId());
+        Assertions.assertEquals(appointmentModel.getFrom(), result.getFrom());
+        Assertions.assertEquals(appointmentModel.getTo(), result.getTo());
+        Assertions.assertEquals(appointmentModel.getSubject(), result.getSubject());
+        Assertions.assertEquals(appointmentModel.getDescription(), result.getDescription());
+
     }
 
     @BeforeEach
