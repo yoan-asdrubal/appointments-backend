@@ -1,5 +1,6 @@
 package com.appointments.api.service;
 
+import com.appointments.api.IApiApplicationTest;
 import com.appointments.api.model.AppointmentModel;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.*;
@@ -13,9 +14,8 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class AppointmentServiceTest {
+public class AppointmentServiceTest implements IApiApplicationTest {
     @Autowired
     private AppointmentService appointmentService;
 
@@ -59,8 +59,8 @@ public class AppointmentServiceTest {
         appointmentService.deleteAll();
     }
 
-    @AfterEach
-    void clearAfterAll() {
-        appointmentService.deleteAll();
-    }
+//    @AfterEach
+//    void clearAfterAll() {
+//        appointmentService.deleteAll();
+//    }
 }

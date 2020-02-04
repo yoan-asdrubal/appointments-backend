@@ -1,5 +1,6 @@
 package com.appointments.api.controller;
 
+import com.appointments.api.IApiApplicationTest;
 import com.appointments.api.model.AppointmentModel;
 import com.appointments.api.service.AppointmentService;
 import org.bson.types.ObjectId;
@@ -23,9 +24,8 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
-@ExtendWith(SpringExtension.class)
 @WebMvcTest
-public class AppointmentControllerIntegrationTest {
+public class AppointmentControllerIntegrationTest implements IApiApplicationTest {
 
     @Autowired
     MockMvc mockMvc;
