@@ -14,4 +14,6 @@ public interface IService<T, U> {
     Optional<T> findById(U id);
 
     void deleteAll();
+
+    void delete(U id);
 }
