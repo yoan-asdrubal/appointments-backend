@@ -1,4 +1,3 @@
 spring:
-  data:
-    mongodb:
-      uri: mongodb+srv://dbadmin:zaq1ZAQ1@clusterappoiments-y9etg.mongodb.net/test?retryWrites=true&w=majority
+  profiles:
+    active: @activatedProperties@
