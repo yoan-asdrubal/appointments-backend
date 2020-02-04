@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 public class AppointmentServiceTest implements IApiApplicationTest {
@@ -52,6 +53,20 @@ public class AppointmentServiceTest implements IApiApplicationTest {
             Assertions.assertEquals(apModel.getDescription(), apResult.getDescription());
         }
 
+    }
+
+    @Test
+    void saveAppointmentAndFindById() {
+        AppointmentModel appointmentModel = new AppointmentModel(
+                LocalDateTime.of(2020, Month.FEBRUARY, 01, 8, 30),
+                LocalDateTime.of(2020, 02, 01, 12, 30),
+                "Metting", "Description for Meeting test"
+        );
+        AppointmentModel saved = appointmentService.save(appointmentModel);
+        Optional<AppointmentModel> appointmentModelById = appointmentService.findById(new ObjectId(saved.getId()));
+        AppointmentModel result = appointmentModelById.orElse(null);
+        Assertions.assertNotNull(result);
+        Assertions.assertNotNull(result.getId());
     }
 
     @BeforeEach

@@ -1,6 +1,7 @@
 package com.appointments.api.service;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IService<T, U> {
 
@@ -9,6 +10,8 @@ public interface IService<T, U> {
     public Iterable<T> saveAll(Iterable<T> models);
 
     List<T> findAll();
+
+    Optional<T> findById(U id);
 
     void deleteAll();
 }
