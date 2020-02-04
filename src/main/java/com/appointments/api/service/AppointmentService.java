@@ -27,6 +27,11 @@ public class AppointmentService implements IService<AppointmentModel, ObjectId> 
     }
 
     @Override
+    public void delete(ObjectId id) {
+        appointmentsRepository.deleteById(id);
+    }
+
+    @Override
     public List<AppointmentModel> findAll() {
         return appointmentsRepository.findAll();
     }

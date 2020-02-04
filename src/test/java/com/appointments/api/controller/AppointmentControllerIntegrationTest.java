@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @WebMvcTest
 public class AppointmentControllerIntegrationTest implements IApiApplicationTest {
@@ -86,6 +87,39 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
         Assertions.assertEquals(appointmentModel.getTo(), result.getTo());
         Assertions.assertEquals(appointmentModel.getSubject(), result.getSubject());
         Assertions.assertEquals(appointmentModel.getDescription(), result.getDescription());
+
+    }
+
+    @Test
+    void deleteAppointmentSuccess() throws Exception {
+        AppointmentModel appointmentModel = new AppointmentModel(
+                new ObjectId().toString(),
+                LocalDateTime.of(2020, 02, 04, 10, 30),
+                LocalDateTime.of(220, 02, 04, 17, 00),
+                "Appointment", "Description for Appointment"
+        );
+
+        Mockito.doNothing().when(appointmentService).delete(ArgumentMatchers.any(ObjectId.class));
+
+        Mockito.when(appointmentService.findById(ArgumentMatchers.any(ObjectId.class))).thenReturn(Optional.of(appointmentModel));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/appointment/{id}", appointmentModel.getId())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
+
+    @Test
+    void deleteAppointmentNotFoundError() throws Exception {
+
+        Mockito.doNothing().when(appointmentService).delete(ArgumentMatchers.any(ObjectId.class));
+        Mockito.when(appointmentService.findById(ArgumentMatchers.any(ObjectId.class))).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/appointment/{id}", new ObjectId().toString())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isNotFound());
 
     }
 
