@@ -10,5 +10,5 @@ public interface IService<T, U> {
 
     List<T> findAll();
 
-    void clearCollection();
+    void deleteAll();
 }

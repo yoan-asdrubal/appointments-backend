@@ -2,7 +2,6 @@ package com.appointments.api.controller;
 
 import com.appointments.api.model.AppointmentModel;
 import com.appointments.api.service.AppointmentService;
-import javafx.beans.binding.When;
 import org.bson.types.ObjectId;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +21,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
@@ -59,6 +57,6 @@ public class AppointmentControllerIntegrationTest {
 
     @BeforeEach
     void clearCollection() {
-        appointmentService.clearCollection();
+        appointmentService.deleteAll();
     }
 }

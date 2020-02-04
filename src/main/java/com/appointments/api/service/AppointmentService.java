@@ -20,7 +20,7 @@ public class AppointmentService implements IService<AppointmentModel, ObjectId> 
 
 
     @Override
-    public void clearCollection() {
+    public void deleteAll() {
         appointmentsRepository.deleteAll();
     }
 
