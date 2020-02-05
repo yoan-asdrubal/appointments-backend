@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
@@ -63,10 +64,27 @@ public class AppointmentServiceTest implements IApiApplicationTest {
                 "Metting", "Description for Meeting test"
         );
         AppointmentModel saved = appointmentService.save(appointmentModel);
-        Optional<AppointmentModel> appointmentModelById = appointmentService.findById(new ObjectId(saved.getId()));
+        Optional<AppointmentModel> appointmentModelById = appointmentService.findById(saved.getId());
         AppointmentModel result = appointmentModelById.orElse(null);
         Assertions.assertNotNull(result);
         Assertions.assertNotNull(result.getId());
+    }
+
+    @Test
+    void findAppointmentAndDeleteById() {
+        AppointmentModel appointmentModel = new AppointmentModel(
+                LocalDateTime.of(2020, Month.FEBRUARY, 01, 8, 30),
+                LocalDateTime.of(2020, 02, 01, 12, 30),
+                "Metting", "Description for Meeting test"
+        );
+        AppointmentModel saved = appointmentService.save(appointmentModel);
+        Optional<AppointmentModel> appointmentModelById = appointmentService.findById(saved.getId());
+        AppointmentModel result = appointmentModelById.orElse(null);
+        Assertions.assertNotNull(result);
+        Assertions.assertNotNull(result.getId());
+        appointmentService.delete(saved.getId());
+        saved = appointmentService.findById(saved.getId()).orElse(null);
+        Assertions.assertNull(saved);
     }
 
     @BeforeEach
