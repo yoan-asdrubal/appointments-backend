@@ -31,13 +31,23 @@ public class AppointmentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable("id") String pathId) {
-        ObjectId id = new ObjectId(pathId);
-        Optional<AppointmentModel> exist = appointmentService.findById(id);
+        Optional<AppointmentModel> exist = appointmentService.findById(pathId);
         if (exist.isPresent()) {
-            appointmentService.delete(id);
+            appointmentService.delete(pathId);
             return new ResponseEntity(HttpStatus.OK);
         } else
             return new ResponseEntity(HttpStatus.NOT_FOUND);
 
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AppointmentModel> getById(@PathVariable("id") String pathId) {
+        Optional<AppointmentModel> exist = appointmentService.findById(pathId);
+        if (exist.isPresent()) {
+            return new ResponseEntity(exist, HttpStatus.OK);
+        } else
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+
+    }
+
 }
