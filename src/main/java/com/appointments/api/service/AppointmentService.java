@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AppointmentService implements IService<AppointmentModel, ObjectId> {
+public class AppointmentService implements IService<AppointmentModel, String> {
 
     @Autowired
     private AppointmentsRepository appointmentsRepository;
@@ -27,8 +27,8 @@ public class AppointmentService implements IService<AppointmentModel, ObjectId> 
     }
 
     @Override
-    public void delete(ObjectId id) {
-        appointmentsRepository.deleteById(id);
+    public void delete(String id) {
+        appointmentsRepository.deleteById(new ObjectId(id));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class AppointmentService implements IService<AppointmentModel, ObjectId> 
     }
 
     @Override
-    public Optional<AppointmentModel> findById(ObjectId id) {
-        return appointmentsRepository.findById(id);
+    public Optional<AppointmentModel> findById(String id) {
+        return appointmentsRepository.findById(new ObjectId(id));
     }
 }
