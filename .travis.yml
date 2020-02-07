@@ -12,6 +12,7 @@ services:
 
 before_install:
   - docker pull openjdk:8-jdk-alpine
+  - chmod +x mvnw
 script:
   - mvn test
   - mvn clean package
