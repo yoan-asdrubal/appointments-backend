@@ -36,3 +36,5 @@ deploy:
   api-key:
     secure: $HEROKU_API_KEY
   app: appointments-backend
+  on
+    branch: develop
