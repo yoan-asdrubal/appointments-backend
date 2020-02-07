@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+    - "lts/*"
+cache:
+
+    directories:
+        - ~/.npm
+        - ./node_modules
+        - ~/.cache
+    override:
+        - npm ci
+        - npm run cy:verify
+before_script:
+    - npm install -g firebase-tools
+    - npm install -g @angular/cli
+script:
+    - npm install
+    - ng build --prod
+    - npm run jest:run
+    - npm run cy:verify
+    - npm run ci:cy-run
+after_success:
+    - firebase deploy --token $FIREBASE_TOKEN
