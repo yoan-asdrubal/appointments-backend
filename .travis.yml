@@ -2,13 +2,7 @@ language: java
 jdk:
   - openjdk8
 services:
-  - docker# env:
-#   global:
-#     secure: IMAGE_NAME
-#     secure: HEROKU_API_KEY
-#     secure: DOCKER_USER
-#     secure: DOCKER_PASS
-#     secure: TEAMS_CHANNEL_URL# replace the following env configurations with your own
+  - docker:
 
 before_install:
   - docker pull openjdk:8-jdk-alpine
@@ -36,5 +30,5 @@ deploy:
   api-key:
     secure: $HEROKU_API_KEY
   app: appointments-backend
-  on
+  on:
     branch: develop
