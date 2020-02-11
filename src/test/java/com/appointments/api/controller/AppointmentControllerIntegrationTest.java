@@ -30,6 +30,7 @@ import java.util.Optional;
 @WebMvcTest
 public class AppointmentControllerIntegrationTest implements IApiApplicationTest {
 
+    public static final String baseUrl = "/api/appointment";
     @Autowired
     MockMvc mockMvc;
 
@@ -54,7 +55,7 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
         ));
         Mockito.when(appointmentService.findAll()).thenReturn(appointmentModels);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/appointment")
+        mockMvc.perform(MockMvcRequestBuilders.get(baseUrl)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2))).andDo(MockMvcResultHandlers.print());
     }
@@ -72,7 +73,7 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
 
         Mockito.when(appointmentService.save(ArgumentMatchers.any(AppointmentModel.class))).thenReturn(appointmentModel);
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/appointment")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(baseUrl)
                 .content(objectMapper.writeValueAsString(appointmentModel))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -98,7 +99,7 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
 
         Mockito.when(appointmentService.findById(ArgumentMatchers.any(String.class))).thenReturn(Optional.of(appointmentModel));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/appointment/{id}", appointmentModel.getId())
+        mockMvc.perform(MockMvcRequestBuilders.delete(baseUrl + "/{id}", appointmentModel.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isOk());
@@ -111,7 +112,7 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
         Mockito.doNothing().when(appointmentService).delete(ArgumentMatchers.any(String.class));
         Mockito.when(appointmentService.findById(ArgumentMatchers.any(String.class))).thenReturn(Optional.empty());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/appointment/{id}", new ObjectId().toString())
+        mockMvc.perform(MockMvcRequestBuilders.delete(baseUrl + "/{id}", new ObjectId().toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -130,7 +131,7 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
 
         Mockito.when(appointmentService.findById(ArgumentMatchers.any(String.class))).thenReturn(Optional.of(appointmentModel));
 
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/appointment/{id}", appointmentModel.getId())
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(baseUrl + "/{id}", appointmentModel.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
         )
