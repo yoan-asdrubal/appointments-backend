@@ -9,14 +9,12 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -43,20 +41,18 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
 
     @Test
     void getAllAppointments() throws Exception {
-        List<AppointmentModel> aps = new ArrayList<>();
-        aps.add(new AppointmentModel(
-                new ObjectId().toString(),
-                LocalDateTime.of(2020, Month.FEBRUARY, 01, 8, 30),
-                LocalDateTime.of(2020, 02, 01, 12, 30),
-                "Metting", "Description for Meeting test"
+        List<AppointmentModel> appointmentModels = new ArrayList<>();
+        appointmentModels.add(new AppointmentModel(
+                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                "8:00 AM", "12:00 PM",
+                "Metting", "Description for Meeting test", "RH"
         ));
-        aps.add(new AppointmentModel(
-                new ObjectId().toString(),
-                LocalDateTime.of(2020, 02, 04, 10, 30),
-                LocalDateTime.of(220, 02, 04, 17, 00),
-                "Appointment", "Description for Appointment"
+        appointmentModels.add(new AppointmentModel(
+                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                "11:00 AM", "2:00 PM",
+                "Appointment", "Description for Apointment test", "GER"
         ));
-        Mockito.when(appointmentService.findAll()).thenReturn(aps);
+        Mockito.when(appointmentService.findAll()).thenReturn(appointmentModels);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/appointment")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -67,9 +63,9 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
     void saveAppointment() throws Exception {
         AppointmentModel appointmentModel = new AppointmentModel(
                 new ObjectId().toString(),
-                LocalDateTime.of(2020, 02, 04, 10, 30),
-                LocalDateTime.of(220, 02, 04, 17, 00),
-                "Appointment", "Description for Appointment"
+                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                "8:00 AM", "12:00 PM",
+                "Metting", "Description for Meeting test", "RH"
         );
         String id = new ObjectId().toString();
 
@@ -83,8 +79,7 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
                 .andReturn();
         AppointmentModel result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), AppointmentModel.class);
         Assertions.assertNotNull(result.getId());
-        Assertions.assertEquals(appointmentModel.getFrom(), result.getFrom());
-        Assertions.assertEquals(appointmentModel.getTo(), result.getTo());
+        Assertions.assertEquals(appointmentModel.getDate(), result.getDate());
         Assertions.assertEquals(appointmentModel.getSubject(), result.getSubject());
         Assertions.assertEquals(appointmentModel.getDescription(), result.getDescription());
 
@@ -94,9 +89,9 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
     void deleteAppointmentSuccess() throws Exception {
         AppointmentModel appointmentModel = new AppointmentModel(
                 new ObjectId().toString(),
-                LocalDateTime.of(2020, 02, 04, 10, 30),
-                LocalDateTime.of(220, 02, 04, 17, 00),
-                "Appointment", "Description for Appointment"
+                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                "8:00 AM", "12:00 PM",
+                "Metting", "Description for Meeting test", "RH"
         );
 
         Mockito.doNothing().when(appointmentService).delete(ArgumentMatchers.any(String.class));
@@ -127,9 +122,9 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
     void getAppointmentById() throws Exception {
         AppointmentModel appointmentModel = new AppointmentModel(
                 new ObjectId().toString(),
-                LocalDateTime.of(2020, 02, 04, 10, 30),
-                LocalDateTime.of(220, 02, 04, 17, 00),
-                "Appointment", "Description for Appointment"
+                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                "8:00 AM", "12:00 PM",
+                "Metting", "Description for Meeting test", "RH"
         );
 
 
@@ -144,8 +139,8 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
 
         AppointmentModel result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), AppointmentModel.class);
         Assertions.assertNotNull(result.getId());
-        Assertions.assertEquals(appointmentModel.getFrom(), result.getFrom());
-        Assertions.assertEquals(appointmentModel.getTo(), result.getTo());
+        Assertions.assertNotEquals(result.getId(), "");
+        Assertions.assertEquals(appointmentModel.getDate(), result.getDate());
         Assertions.assertEquals(appointmentModel.getSubject(), result.getSubject());
         Assertions.assertEquals(appointmentModel.getDescription(), result.getDescription());
     }

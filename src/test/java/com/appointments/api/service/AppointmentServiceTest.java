@@ -4,12 +4,9 @@ import com.appointments.api.IApiApplicationTest;
 import com.appointments.api.model.AppointmentModel;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
@@ -25,16 +22,14 @@ public class AppointmentServiceTest implements IApiApplicationTest {
     void getAllAppointments() {
         List<AppointmentModel> appointmentModels = new ArrayList<>();
         appointmentModels.add(new AppointmentModel(
-                new ObjectId().toString(),
-                LocalDateTime.of(2020, Month.FEBRUARY, 01, 8, 30),
-                LocalDateTime.of(2020, 02, 01, 12, 30),
-                "Metting", "Description for Meeting test"
+                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                "8:00 AM", "12:00 PM",
+                "Metting", "Description for Meeting test", "RH"
         ));
         appointmentModels.add(new AppointmentModel(
-                new ObjectId().toString(),
-                LocalDateTime.of(2020, 02, 04, 10, 30),
-                LocalDateTime.of(220, 02, 04, 17, 00),
-                "Appointment", "Description for Appointment"
+                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                "11:00 AM", "2:00 PM",
+                "Appointment", "Description for Apointment test", "GER"
         ));
 
         appointmentService.saveAll(appointmentModels);
@@ -43,15 +38,17 @@ public class AppointmentServiceTest implements IApiApplicationTest {
 
         Assertions.assertEquals(appointmentModelList.size(), 2);
 
-        int size = appointmentModels.size();
+        int size = appointmentModelList.size();
         for (int i = 0; i < size; i++) {
-            AppointmentModel apModel = appointmentModels.get(0);
-            AppointmentModel apResult = appointmentModelList.get(0);
+            AppointmentModel apModel = appointmentModels.get(i);
+            AppointmentModel apResult = appointmentModelList.get(i);
             Assertions.assertNotNull(apResult.getId());
-            Assertions.assertEquals(apModel.getFrom(), apResult.getFrom());
-            Assertions.assertEquals(apModel.getTo(), apResult.getTo());
+            Assertions.assertEquals(apModel.getDate(), apResult.getDate());
+            Assertions.assertEquals(apModel.getTimeInit(), apResult.getTimeInit());
+            Assertions.assertEquals(apModel.getTimeEnd(), apResult.getTimeEnd());
             Assertions.assertEquals(apModel.getSubject(), apResult.getSubject());
             Assertions.assertEquals(apModel.getDescription(), apResult.getDescription());
+            Assertions.assertEquals(apModel.getArea(), apResult.getArea());
         }
 
     }
@@ -59,9 +56,9 @@ public class AppointmentServiceTest implements IApiApplicationTest {
     @Test
     void saveAppointmentAndFindById() {
         AppointmentModel appointmentModel = new AppointmentModel(
-                LocalDateTime.of(2020, Month.FEBRUARY, 01, 8, 30),
-                LocalDateTime.of(2020, 02, 01, 12, 30),
-                "Metting", "Description for Meeting test"
+                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                "8:00 AM", "12:00 PM",
+                "Metting", "Description for Meeting test", "RH"
         );
         AppointmentModel saved = appointmentService.save(appointmentModel);
         Optional<AppointmentModel> appointmentModelById = appointmentService.findById(saved.getId());
@@ -73,9 +70,9 @@ public class AppointmentServiceTest implements IApiApplicationTest {
     @Test
     void findAppointmentAndDeleteById() {
         AppointmentModel appointmentModel = new AppointmentModel(
-                LocalDateTime.of(2020, Month.FEBRUARY, 01, 8, 30),
-                LocalDateTime.of(2020, 02, 01, 12, 30),
-                "Metting", "Description for Meeting test"
+                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                "8:00 AM", "12:00 PM",
+                "Metting", "Description for Meeting test", "RH"
         );
         AppointmentModel saved = appointmentService.save(appointmentModel);
         Optional<AppointmentModel> appointmentModelById = appointmentService.findById(saved.getId());
