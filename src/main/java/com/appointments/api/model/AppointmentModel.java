@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Document(collection = "appointments")
@@ -12,8 +13,7 @@ public class AppointmentModel {
     @Id
     private String id;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime date;
+    private Long date;
 
 
     private String timeInit;
@@ -29,7 +29,7 @@ public class AppointmentModel {
     public AppointmentModel() {
     }
 
-    public AppointmentModel(String id, LocalDateTime date, String timeInit, String timeEnd, String subject, String description, String area) {
+    public AppointmentModel(String id, Long date, String timeInit, String timeEnd, String subject, String description, String area) {
         this.id = id;
         this.date = date;
         this.timeInit = timeInit;
@@ -39,7 +39,7 @@ public class AppointmentModel {
         this.area = area;
     }
 
-    public AppointmentModel(LocalDateTime date, String timeInit, String timeEnd, String subject, String description, String area) {
+    public AppointmentModel(Long date, String timeInit, String timeEnd, String subject, String description, String area) {
         this.id = null;
         this.date = date;
         this.timeInit = timeInit;
@@ -57,11 +57,11 @@ public class AppointmentModel {
         this.id = id;
     }
 
-    public LocalDateTime getDate() {
+    public Long getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(Long date) {
         this.date = date;
     }
 

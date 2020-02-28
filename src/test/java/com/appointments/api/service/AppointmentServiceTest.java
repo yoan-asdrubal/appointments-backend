@@ -7,6 +7,8 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
@@ -22,12 +24,12 @@ public class AppointmentServiceTest implements IApiApplicationTest {
     void getAllAppointments() {
         List<AppointmentModel> appointmentModels = new ArrayList<>();
         appointmentModels.add(new AppointmentModel(
-                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                Instant.now().toEpochMilli(),
                 "8:00 AM", "12:00 PM",
                 "Metting", "Description for Meeting test", "RH"
         ));
         appointmentModels.add(new AppointmentModel(
-                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                 Instant.now().toEpochMilli(),
                 "11:00 AM", "2:00 PM",
                 "Appointment", "Description for Apointment test", "GER"
         ));
@@ -56,7 +58,7 @@ public class AppointmentServiceTest implements IApiApplicationTest {
     @Test
     void saveAppointmentAndFindById() {
         AppointmentModel appointmentModel = new AppointmentModel(
-                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                 Instant.now().toEpochMilli(),
                 "8:00 AM", "12:00 PM",
                 "Metting", "Description for Meeting test", "RH"
         );
@@ -70,7 +72,7 @@ public class AppointmentServiceTest implements IApiApplicationTest {
     @Test
     void findAppointmentAndDeleteById() {
         AppointmentModel appointmentModel = new AppointmentModel(
-                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                 Instant.now().toEpochMilli(),
                 "8:00 AM", "12:00 PM",
                 "Metting", "Description for Meeting test", "RH"
         );

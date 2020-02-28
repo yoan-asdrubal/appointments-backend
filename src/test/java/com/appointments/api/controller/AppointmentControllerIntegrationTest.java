@@ -21,11 +21,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @WebMvcTest
 public class AppointmentControllerIntegrationTest implements IApiApplicationTest {
@@ -44,12 +44,12 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
     void getAllAppointments() throws Exception {
         List<AppointmentModel> appointmentModels = new ArrayList<>();
         appointmentModels.add(new AppointmentModel(
-                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                Instant.now().toEpochMilli(),
                 "8:00 AM", "12:00 PM",
                 "Metting", "Description for Meeting test", "RH"
         ));
         appointmentModels.add(new AppointmentModel(
-                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                Instant.now().toEpochMilli(),
                 "11:00 AM", "2:00 PM",
                 "Appointment", "Description for Apointment test", "GER"
         ));
@@ -62,19 +62,30 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
 
     @Test
     void saveAppointment() throws Exception {
+        Long date = Instant.now().toEpochMilli();
         AppointmentModel appointmentModel = new AppointmentModel(
                 new ObjectId().toString(),
-                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                date,
                 "8:00 AM", "12:00 PM",
                 "Metting", "Description for Meeting test", "RH"
         );
         String id = new ObjectId().toString();
 
+        Map params = new HashMap();
+        params.put("id", id);
+        params.put("date", date);
+        params.put("timeInit", "08:00 AM");
+        params.put("timeEnd", "12:00 PM");
+        params.put("subject", "Metting");
+        params.put("description", "Description for Meeting test");
+        params.put("area", "RH");
 
         Mockito.when(appointmentService.save(ArgumentMatchers.any(AppointmentModel.class))).thenReturn(appointmentModel);
 
+        String stringParams = objectMapper.writeValueAsString(params);
+        System.out.println(stringParams);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(baseUrl)
-                .content(objectMapper.writeValueAsString(appointmentModel))
+                .content(stringParams)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
@@ -90,7 +101,7 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
     void deleteAppointmentSuccess() throws Exception {
         AppointmentModel appointmentModel = new AppointmentModel(
                 new ObjectId().toString(),
-                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                Instant.now().toEpochMilli(),
                 "8:00 AM", "12:00 PM",
                 "Metting", "Description for Meeting test", "RH"
         );
@@ -123,7 +134,7 @@ public class AppointmentControllerIntegrationTest implements IApiApplicationTest
     void getAppointmentById() throws Exception {
         AppointmentModel appointmentModel = new AppointmentModel(
                 new ObjectId().toString(),
-                LocalDateTime.of(2020, Month.FEBRUARY, 01, 0, 0),
+                Instant.now().toEpochMilli(),
                 "8:00 AM", "12:00 PM",
                 "Metting", "Description for Meeting test", "RH"
         );
